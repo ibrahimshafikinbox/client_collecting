@@ -15,4 +15,17 @@ class PaymentSuccess extends PaymentStates {
 
 class PaymentFailure extends PaymentStates {}
 
-class Paymentaddeddtoqueuee extends PaymentStates {}
+class PaymentAddedToQueue extends PaymentStates {
+  final Map<String, dynamic> paymentData;
+
+  PaymentAddedToQueue(this.paymentData);
+}
+
+class UpdatedCustomerData extends PaymentStates {}
+
+// refund state
+class RefundLoading extends PaymentStates {}
+
+class RefundSuccess extends PaymentStates {}
+
+class RefundFailure extends PaymentStates {}

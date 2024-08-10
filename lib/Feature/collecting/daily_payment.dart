@@ -42,7 +42,7 @@ class _RecordsPageState extends State<RecordsPage> {
           } else if (state is GetRecordsSuccess) {
             return _buildRecordsTable(state.recordsModel);
           } else if (state is GetRecordsError) {
-            return Center(child: Text('خطأ: ${state.error}'));
+            return Center(child: Text('خطأ: لم يتم العثور على سجلات.'));
           } else {
             return const Center(child: Text('لم يتم العثور على سجلات.'));
           }
@@ -153,36 +153,59 @@ class _RecordsPageState extends State<RecordsPage> {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.blue,
-                              ),
-                              child: Center(
-                                  child: TextButton(
-                                child: const Text(
-                                  "استرجاع ",
-                                  style: AppTextStyle.textStyleMediumBlack,
-                                ),
-                                onPressed: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) {
-                                      return RefundWidget(
-                                        clientName: record.customer?.name ?? "",
-                                        onPressed: () {
-                                          PaymentCubit.get(context).postPayment(
-                                              record.customer!.id, true);
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                              )),
-                            ),
-                          ),
+                          record.isRefund == false
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Colors.blue,
+                                    ),
+                                    child: Center(
+                                        child: TextButton(
+                                      child: const Text(
+                                        "استيراد ",
+                                        style:
+                                            AppTextStyle.textStyleWhiteSemiBold,
+                                      ),
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (context) {
+                                            return RefundWidget(
+                                              clientName:
+                                                  record.customer?.name ?? "",
+                                              onPressed: () {
+                                                PaymentCubit.get(context)
+                                                    .refundPayment(
+                                                  record.customer!.id,
+                                                );
+                                              },
+                                            );
+                                          },
+                                        );
+                                      },
+                                    )),
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          color:
+                                              Color.fromARGB(255, 36, 129, 40),
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Center(
+                                            child: Text(
+                                          "تم الاسترداد",
+                                          style:
+                                              AppTextStyle.textStyleWhiteMedium,
+                                        )),
+                                      )),
+                                )
                         ],
                       );
                     })

@@ -2,6 +2,7 @@ import 'package:client_app/Core/Helper/DatabaseHelper.dart';
 import 'package:client_app/Feature/Login/View/login_view.dart';
 import 'package:client_app/Feature/Login/cubit/Login_Cubit.dart';
 import 'package:client_app/Feature/customer_list/View/customer_list_view.dart';
+import 'package:client_app/Feature/customer_list/Widget/OfflineCustomerWidget.dart';
 import 'package:client_app/Feature/customer_list/cubit/get_customer_cubit.dart';
 import 'package:client_app/Feature/customer_notes/cubit/custoemr_notes_cubit.dart';
 import 'package:client_app/Feature/payment/cubit/paymant_cubit.dart';

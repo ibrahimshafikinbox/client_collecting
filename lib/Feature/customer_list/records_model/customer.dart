@@ -1,5 +1,5 @@
 class Customer {
-  int? id;
+  dynamic id;
   String? name;
 
   Customer({this.id, this.name});

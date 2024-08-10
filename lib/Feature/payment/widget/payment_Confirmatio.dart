@@ -37,7 +37,7 @@ class _PaymentConfirmationWidgetState extends State<PaymentConfirmationWidget> {
           // showToast(
           //     text: "فشلت العملية، يرجى المحاولة مرة أخرى.",
           //     state: ToastStates.ERROR);
-        } else if (state is Paymentaddeddtoqueuee) {
+        } else if (state is PaymentAddedToQueue) {
           showCustomDialog(context, "تمت الاضافه الى قائمه الانتظار ");
 
           // showToast(

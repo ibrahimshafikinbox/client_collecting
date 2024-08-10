@@ -1,6 +1,6 @@
-import 'package:client_app/Feature/customer_notes/customer_notes_model/customer_notes_model.dart';
 import 'package:client_app/Feature/customer_notes/model/notes_model/notes_model.dart';
 
+// customer get notes
 abstract class CustomerNotesState {}
 
 class CustomerNotesInitial extends CustomerNotesState {}
@@ -18,3 +18,10 @@ class CustomerNotesError extends CustomerNotesState {
 
   CustomerNotesError(this.error);
 }
+
+// cutomer add notes
+class CustomerAddNotesLoading extends CustomerNotesState {}
+
+class CustomerAddNotesSuccess extends CustomerNotesState {}
+
+class CustomerAddNotesFailure extends CustomerNotesState {}

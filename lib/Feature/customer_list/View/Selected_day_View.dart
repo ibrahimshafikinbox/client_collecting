@@ -173,7 +173,7 @@ class _SelectedDayCustomersPageState extends State<SelectedDayCustomersPage> {
                                                   onPressed: () {
                                                     PaymentCubit.get(context)
                                                         .postPayment(
-                                                            customer.id, true);
+                                                            customer.id, false);
                                                   },
                                                 );
                                               },

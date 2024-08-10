@@ -1,3 +1,4 @@
+import 'package:client_app/Feature/customer_notes/cubit/custoemr_notes_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:client_app/Feature/customer_list/customer_model/customer_model.dart';
 import 'package:client_app/Feature/widget/customer_data.dart';
@@ -134,8 +135,22 @@ class _CustomerTableState extends State<CustomerTable> {
                                   collectionDay:
                                       customer.collectDay?.toInt() ?? 0,
                                   amount: customer.amount ?? 0,
-                                  abstainedonpress: () {},
-                                  maintenanceonpress: () {},
+                                  abstainedonpress: () {
+                                    CustomerNotesCubit.get(context)
+                                        .addNote(customer.id, 1)
+                                        .then(
+                                      (value) {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  },
+                                  maintenanceonpress: () {
+                                    CustomerNotesCubit.get(context)
+                                        .addNote(customer.id, 2)
+                                        .then((value) {
+                                      Navigator.pop(context);
+                                    });
+                                  },
                                 );
                               },
                             );
@@ -165,7 +180,7 @@ class _CustomerTableState extends State<CustomerTable> {
                                         clientName: customer.name ?? "",
                                         onPressed: () {
                                           PaymentCubit.get(context)
-                                              .postPayment(customer.id, true);
+                                              .postPayment(customer.id, false);
                                         },
                                       );
                                     },

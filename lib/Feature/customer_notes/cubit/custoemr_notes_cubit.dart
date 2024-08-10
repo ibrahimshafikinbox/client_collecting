@@ -1,16 +1,30 @@
 import 'package:client_app/Core/Helper/constants.dart';
 import 'package:client_app/Core/Helper/snack_bar_helper.dart';
 import 'package:client_app/Feature/customer_notes/cubit/customer_notes_state.dart';
-import 'package:client_app/Feature/customer_notes/customer_notes_model/customer_notes_model.dart';
 import 'package:client_app/Feature/customer_notes/model/notes_model/notes_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerNotesCubit extends Cubit<CustomerNotesState> {
   final Dio _dio = Dio();
+  String? _token; // Store token as a member variable
 
-  CustomerNotesCubit() : super(CustomerNotesInitial());
+  CustomerNotesCubit() : super(CustomerNotesInitial()) {
+    _initializeToken().then((value) {
+      getCustomerNotes();
+    }); // Initialize token
+  }
   static CustomerNotesCubit get(context) => BlocProvider.of(context);
+  Future<void> _initializeToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString('token');
+    if (_token == null) {
+      print("Token not found in SharedPreferences.");
+    } else {
+      print("Token initialized: $_token");
+    }
+  }
 
   Future<void> getCustomerNotes() async {
     try {
@@ -19,9 +33,7 @@ class CustomerNotesCubit extends Cubit<CustomerNotesState> {
         '${Constants.baseUrl}${Constants.notes}',
         options: Options(
           headers: {
-            'Accept': 'application/json',
-            'Accept-Language': 'en',
-            "Authorization": "Token 55c754cbcb7b0a0631b13a44d0641514d5171175",
+            "Authorization": "Token $_token",
           },
         ),
       );
@@ -36,6 +48,7 @@ class CustomerNotesCubit extends Cubit<CustomerNotesState> {
   }
 
   Future<void> addNote(id, noteType) async {
+    emit(CustomerAddNotesLoading());
     await _dio
         .post(
       "${Constants.baseUrl}${Constants.notes}",
@@ -45,20 +58,22 @@ class CustomerNotesCubit extends Cubit<CustomerNotesState> {
       },
       options: Options(
         headers: {
-          'Accept': 'application/json',
-          'Accept-Language': 'en',
-          "Authorization": "Token 55c754cbcb7b0a0631b13a44d0641514d5171175",
+          "Authorization": "Token $_token",
         },
       ),
     )
         .then((value) {
       print(value.data);
+      emit(CustomerAddNotesSuccess());
+
       showToast(text: "تم تسجيل ملاحظتك بنجاح", state: ToastStates.SUCCESS);
     }).catchError((e) {
+      print("${e.toString()}");
+
       showToast(
           text: "لم يتم تسجيل ملاحظتك , حاول مجددا", state: ToastStates.ERROR);
 
-      print("$e");
+      emit(CustomerAddNotesFailure());
     });
   }
 }

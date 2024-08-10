@@ -34,8 +34,8 @@ class _NotesPageContentState extends State<NotesPageContent> {
           );
         } else if (state is CustomerNotesError) {
           return Center(
-              child: Text(
-                  'Failed to fetch notes. Please try again later.')); // Show error message if failed to fetch notes
+              child:
+                  CircularProgressIndicator()); // Show error message if failed to fetch notes
         } else {
           return Center(
               child: Text('Unknown state')); // Handle any unexpected state

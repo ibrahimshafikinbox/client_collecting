@@ -11,6 +11,8 @@ class GetCustomerInitial extends GetCustomerState {
 
 class GetCustomerLoading extends GetCustomerState {}
 
+class UNAouthorization extends GetCustomerState {}
+
 class GetCustomerSuccess extends GetCustomerState {
   final List<CustomerModel> customers;
 

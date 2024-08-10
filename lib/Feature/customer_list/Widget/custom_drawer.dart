@@ -1,4 +1,5 @@
 import 'package:client_app/Core/Helper/naviagation_helper.dart';
+import 'package:client_app/Feature/Login/View/login_view.dart';
 import 'package:client_app/Feature/Login/cubit/Login_Cubit.dart';
 import 'package:client_app/Feature/customer_list/View/customer_list_view.dart';
 import 'package:client_app/Feature/customer_notes/view/customer_notes_view.dart';
@@ -72,7 +73,7 @@ class CustomDrawer extends StatelessWidget {
                         leading: Icon(Icons.report_outlined),
                         title: Text('ملاحظات العملاء'),
                         onTap: () {
-                          navigateAndFinish(context, NotesPage());
+                          navigateTo(context, NotesPage());
                         },
                       ),
                       FutureBuilder<double>(
@@ -102,9 +103,7 @@ class CustomDrawer extends StatelessWidget {
                         onTap: () async {
                           final cubit = LoginCubit.get(context);
                           await cubit.logOutUser(); // Trigger logout
-                          Navigator.pop(context); // Close the drawer
-                          Navigator.pushReplacementNamed(
-                              context, '/login'); // Navigate to login page
+                          navigateAndFinish(context, LoginView());
                         },
                       ),
                       // ListTile to display subtraction value
