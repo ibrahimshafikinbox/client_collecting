@@ -1,3 +1,5 @@
+import 'package:client_app/Core/Helper/naviagation_helper.dart';
+import 'package:client_app/Feature/customer_list/View/customer_list_view.dart';
 import 'package:client_app/Feature/payment/cubit/paymant_cubit.dart';
 import 'package:client_app/Feature/payment/widget/refund_widget.dart';
 import 'package:client_app/Feature/resources/styles/app_text_style.dart';
@@ -33,8 +35,13 @@ class _RecordsPageState extends State<RecordsPage> {
         child: const Icon(Icons.refresh),
       ),
       appBar: AppBar(
-        title: const Text('السجلات'),
-      ),
+          title: const Text('السجلات'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              navigateAndFinish(context, CustomerListView());
+            },
+          )),
       body: BlocBuilder<GetCustomerCubit, GetCustomerState>(
         builder: (context, state) {
           if (state is GetRecordsLoading) {
@@ -179,7 +186,17 @@ class _RecordsPageState extends State<RecordsPage> {
                                                 PaymentCubit.get(context)
                                                     .refundPayment(
                                                   record.customer!.id,
-                                                );
+                                                )
+                                                    .then((_) {
+                                                  setState(() {
+                                                    // Find the record and update the refund status
+                                                    record.amount =
+                                                        25; // Update amount directly
+
+                                                    record.isRefund = true;
+                                                  });
+                                                  Navigator.pop(context);
+                                                });
                                               },
                                             );
                                           },
@@ -192,8 +209,8 @@ class _RecordsPageState extends State<RecordsPage> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
                                       decoration: BoxDecoration(
-                                          color:
-                                              Color.fromARGB(255, 36, 129, 40),
+                                          color: const Color.fromARGB(
+                                              255, 36, 129, 40),
                                           borderRadius:
                                               BorderRadius.circular(12)),
                                       child: const Padding(
@@ -208,7 +225,7 @@ class _RecordsPageState extends State<RecordsPage> {
                                 )
                         ],
                       );
-                    })
+                    }).toList()
                   ],
                 ),
               ),

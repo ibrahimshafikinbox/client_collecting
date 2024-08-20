@@ -2,7 +2,9 @@ import 'package:client_app/Core/Helper/naviagation_helper.dart';
 import 'package:client_app/Feature/Login/View/login_view.dart';
 import 'package:client_app/Feature/Login/cubit/Login_Cubit.dart';
 import 'package:client_app/Feature/customer_list/View/customer_list_view.dart';
+import 'package:client_app/Feature/customer_list/cubit/get_customer_cubit.dart';
 import 'package:client_app/Feature/customer_notes/view/customer_notes_view.dart';
+import 'package:client_app/Feature/resources/styles/app_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,14 +48,8 @@ class CustomDrawer extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Text(
-                        'اسم المستخدم : ${usernameSnapshot.data}',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      Text('اسم المستخدم : ${usernameSnapshot.data}',
+                          style: AppTextStyle.textStyleWhiteSemiBold19),
                     ],
                   ),
                 ),
@@ -76,6 +72,55 @@ class CustomDrawer extends StatelessWidget {
                           navigateTo(context, NotesPage());
                         },
                       ),
+                      ListTile(
+                          leading: Icon(Icons.update),
+                          title: Text(' تحديث البيانات  '),
+                          onTap: () async {
+                            final cubit = GetCustomerCubit.get(context);
+
+                            // Show a loading dialog
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return const AlertDialog(
+                                  content: Row(
+                                    children: [
+                                      CircularProgressIndicator(),
+                                      SizedBox(width: 25),
+                                      Text("يتم التحديث..."),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+
+                            try {
+                              await cubit.refreshApp();
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('تم تحديث البيانات بنجاح!')),
+                              );
+                            } catch (error) {
+                              Navigator.pop(
+                                  context); // Close the loading dialog
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content:
+                                        Text('فشل في تحديث البيانات: $error')),
+                              );
+                            }
+
+                            Navigator.pop(context); // Close the drawer
+                          }
+
+                          // onTap: () async {
+                          //   final cubit = GetCustomerCubit.get(context);
+                          //   await cubit.refreshApp();
+                          //   Navigator.pop(context); // close drawer
+                          // },
+                          ),
                       FutureBuilder<double>(
                         future: getSubtractionValue(),
                         builder: (context, valueSnapshot) {
@@ -103,10 +148,9 @@ class CustomDrawer extends StatelessWidget {
                         onTap: () async {
                           final cubit = LoginCubit.get(context);
                           await cubit.logOutUser(); // Trigger logout
-                          navigateAndFinish(context, LoginView());
+                          navigateAndFinish(context, const LoginView());
                         },
                       ),
-                      // ListTile to display subtraction value
                     ],
                   ),
                 ),

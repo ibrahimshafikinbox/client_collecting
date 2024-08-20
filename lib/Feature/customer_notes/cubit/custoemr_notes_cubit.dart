@@ -27,8 +27,9 @@ class CustomerNotesCubit extends Cubit<CustomerNotesState> {
   }
 
   Future<void> getCustomerNotes() async {
+    emit(CustomerNotesLoading());
+
     try {
-      emit(CustomerNotesLoading());
       final response = await _dio.get(
         '${Constants.baseUrl}${Constants.notes}',
         options: Options(
@@ -37,13 +38,29 @@ class CustomerNotesCubit extends Cubit<CustomerNotesState> {
           },
         ),
       );
+
       final List<NotesModel> customerNotes = List<NotesModel>.from(
         response.data.map((noteJson) => NotesModel.fromJson(noteJson)),
       );
-      print(customerNotes.first.customer?.address);
       emit(CustomerNotesLoaded(customerNotes));
     } catch (e) {
-      emit(CustomerNotesError(e.toString()));
+      if (e is DioError) {
+        if (e.response?.statusCode == 401) {
+          print("Not Authorized: Invalid Token");
+          emit(NotaAouthorized());
+        } else {
+          print("Error: ${e.response?.statusCode}");
+          emit(CustomerNotesError("فشل في تحميل الملاحظات"));
+          showToast(
+              text: "حدث خطأ ما أثناء تحميل الملاحظات",
+              state: ToastStates.ERROR);
+        }
+      } else {
+        print(e.toString());
+        emit(CustomerNotesError("فشل في تحميل الملاحظات"));
+        showToast(
+            text: "حدث خطأ ما أثناء تحميل الملاحظات", state: ToastStates.ERROR);
+      }
     }
   }
 

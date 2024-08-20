@@ -25,3 +25,5 @@ class CustomerAddNotesLoading extends CustomerNotesState {}
 class CustomerAddNotesSuccess extends CustomerNotesState {}
 
 class CustomerAddNotesFailure extends CustomerNotesState {}
+
+class NotaAouthorized extends CustomerNotesState {}

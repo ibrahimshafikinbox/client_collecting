@@ -1,6 +1,7 @@
 import 'package:client_app/Feature/customer_notes/cubit/custoemr_notes_cubit.dart';
 import 'package:client_app/Feature/customer_notes/cubit/customer_notes_state.dart';
 import 'package:client_app/Feature/customer_notes/widget/customer_build_item.dart';
+import 'package:client_app/Feature/widget/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,7 +13,13 @@ class NotesPageContent extends StatefulWidget {
 class _NotesPageContentState extends State<NotesPageContent> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CustomerNotesCubit, CustomerNotesState>(
+    return BlocConsumer<CustomerNotesCubit, CustomerNotesState>(
+      listener: (context, state) {
+        if (state is NotaAouthorized) {
+          showCustomDialog(
+              context, "خطا فى الرمز .. برجاء اعاده تسجيل الدخول ");
+        }
+      },
       builder: (context, state) {
         if (state is CustomerNotesLoading) {
           return Center(
@@ -33,12 +40,22 @@ class _NotesPageContentState extends State<NotesPageContent> {
             },
           );
         } else if (state is CustomerNotesError) {
-          return Center(
-              child:
-                  CircularProgressIndicator()); // Show error message if failed to fetch notes
+          return Column(
+            children: [
+              Center(
+                child: Text("خطا فى تحميل البيانات "),
+              ),
+              TextButton(
+                  onPressed: () {
+                    CustomerNotesCubit().getCustomerNotes();
+                  },
+                  child: Text("اعاده التحميل "))
+            ],
+          );
         } else {
           return Center(
-              child: Text('Unknown state')); // Handle any unexpected state
+              child: Text(
+                  "برجاء اعاده  تسجيل الدخول الى  حسابك ")); // Handle any unexpected state
         }
       },
     );

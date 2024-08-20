@@ -29,10 +29,7 @@ class _NotesPageState extends State<NotesPage> {
                   color: Colors.white,
                 ))
           ]),
-      body: BlocProvider(
-        create: (context) => CustomerNotesCubit()..getCustomerNotes(),
-        child: NotesPageContent(),
-      ),
+      body: NotesPageContent(),
     );
   }
 }

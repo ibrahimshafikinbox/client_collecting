@@ -27,6 +27,8 @@ class GetCustomerError extends GetCustomerState {
 
 class GetRecordsLoading extends GetCustomerState {}
 
+class NotaAouthorized extends GetCustomerState {}
+
 class GetRecordsSuccess extends GetCustomerState {
   final RecordsModel recordsModel;
   GetRecordsSuccess(this.recordsModel);
